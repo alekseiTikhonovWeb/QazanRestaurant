@@ -263,8 +263,8 @@ Photos go in `public/images/` (WebP, about 1200 px wide is plenty; the build com
 
 | When | What happened |
 |---|---|
-| Feb 2026 | First prototype of the concept, generated with Google AI Studio and deployed as a proof of the design direction |
-| Feb 2026 | Rebuilt by hand: one folder per page, typed translations, Framer Motion animations, the hero and header behaviour, the reservation section |
+| Feb 2026 | First prototype of the concept, deployed to test the design direction |
+| Feb 2026 | Restructured: one folder per page, typed translations, Framer Motion animations, the hero and header behaviour, the reservation section |
 | Mar 2026 | Real content from the restaurant: the menu with photos of every dish, the team, Google reviews, the story pages. Clean URLs, SEO and structured data, favicons, code splitting, image optimisation. Site goes live at qazan.fi |
 | After launch | Reservations moved to Tebi, the restaurant's booking and ordering system |
 | Sep 2026 | Repository audit: strict TypeScript and ESLint with CI, self-hosted fonts, a 404 page, language detection from the URL and the browser, dead code and 12 MB of unused images removed, all contact details and links moved into one place, this README |
