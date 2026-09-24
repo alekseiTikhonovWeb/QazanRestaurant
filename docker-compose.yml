@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    image: qazan-web:latest
+    container_name: qazan_web
+    ports:
+      - "80:80"
+    restart: unless-stopped

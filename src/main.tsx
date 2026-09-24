@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '../index.css';
+// Self-hosted fonts: no request to Google Fonts, no third-party tracking.
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/playfair-display';
+import '@fontsource-variable/playfair-display/wght-italic.css';
+import './index.css';
 import App from './App';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+  throw new Error('Could not find root element to mount to');
 }
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

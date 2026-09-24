@@ -1,0 +1,14 @@
+# ─── SPA Fallback for Netlify ────────────────────────────
+# When someone visits qazan.fi/menu directly, Netlify's server
+# looks for a file called /menu. There is no such file — it's
+# a React route. Without this rule, you get a 404.
+#
+# This rule says: "For ANY path that doesn't match a real file,
+# serve index.html instead (with a 200 status, not a redirect)."
+# Then React Router takes over and renders the correct page.
+#
+# The 200 (not 301/302) is important — it means "serve this file
+# AS IF it was the requested URL" rather than redirecting.
+# ─────────────────────────────────────────────────────────────
+
+/*    /index.html   200

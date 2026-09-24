@@ -13,11 +13,13 @@ const StoryHero: React.FC<StoryHeroProps> = ({ t, y1 }) => {
     <header className="relative w-full h-[70vh] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
       <motion.div style={{ y: y1 }} className="absolute inset-0 w-full h-[120%] z-0 -top-[10%]">
         <img
-          src="/images/story.jpg"
-          alt="Ancient City Architecture"
+          src="/images/story_main.webp"
+          alt="Eagle hunter in traditional dress against mountains"
+          width={1200}
+          height={800}
           className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-[#0a0a0a]"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/20 to-qazan-black"></div>
       </motion.div>
 
       <div className="relative z-10">

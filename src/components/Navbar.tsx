@@ -1,19 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { Language } from '../types';
+import { Language, Translations } from '../types';
 
 interface NavbarProps {
   lang: Language;
   setLang: (lang: Language) => void;
-  t: any;
+  t: Translations;
 }
+
+interface NavLinkProps {
+  to: string;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}
+
+// Defined outside Navbar so React keeps the same component identity across renders.
+const NavLink = ({ to, label, active, onClick }: NavLinkProps) => (
+  <Link
+    to={to}
+    onClick={onClick}
+    className={`transition-colors duration-300 font-serif uppercase tracking-[0.15em] text-sm md:text-xs lg:text-sm relative group ${active ? 'text-qazan-gold' : 'hover:text-qazan-ruby'}`}
+  >
+    {label}
+    <span className={`absolute -bottom-2 left-0 w-full h-px bg-qazan-gold transform transition-transform duration-300 ${active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-50'}`}></span>
+  </Link>
+);
 
 const Navbar: React.FC<NavbarProps> = ({ lang, setLang, t }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,33 +55,35 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, t }) => {
     };
   }, [isOpen]);
 
-  const isHome = location.pathname === '/';
+  // ─── Handle hash scrolling after navigation ────────────────────────
+  // This handles the "Reserve" link which needs to:
+  //   1. Navigate to / (home page)
+  //   2. THEN scroll to #reservation
+  //
+  // Why is this needed? With BrowserRouter, <Link to="/#reservation">
+  // doesn't automatically scroll to the element. React Router navigates
+  // to "/" but ignores the hash. So we handle it manually:
+  //   - If already on "/", just scroll to the element
+  //   - If on another page, navigate to "/" and scroll after render
+  const scrollToReservation = () => {
+    setIsOpen(false);
 
-  const NavLink = ({ to, label, isHash = false }: { to: string; label: string; isHash?: boolean }) => {
-    // Check if active
-    let isActive = false;
-    if (isHash) {
-       // Hash links are usually on home page sections
-       isActive = location.pathname === '/' && location.hash === to.replace('/', '');
+    if (location.pathname === '/') {
+      // Already on home page — just scroll
+      const el = document.getElementById('reservation');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     } else {
-       isActive = location.pathname === to;
+      // Navigate to home first, then scroll after the page renders
+      navigate('/');
+      // setTimeout gives React time to render the home page before scrolling
+      setTimeout(() => {
+        const el = document.getElementById('reservation');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
-
-    const handleClick = () => {
-      setIsOpen(false);
-    };
-
-    return (
-      <Link
-        to={to}
-        onClick={handleClick}
-        className={`transition-colors duration-300 font-serif uppercase tracking-[0.15em] text-sm md:text-xs lg:text-sm relative group ${isActive ? 'text-qazan-gold' : 'hover:text-qazan-ruby'}`}
-      >
-        {label}
-        <span className={`absolute -bottom-2 left-0 w-full h-px bg-qazan-gold transform transition-transform duration-300 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-50'}`}></span>
-      </Link>
-    );
   };
+
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <>
@@ -76,15 +98,22 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, t }) => {
           `}>
             {/* Logo */}
             <Link to="/" className="text-3xl font-serif font-bold tracking-widest text-white mr-8 md:mr-12 hover:text-qazan-ruby transition-colors">
-              QAZAN
+              <img src='/images/logo_qazan.svg' alt='qazan logo' width={120} height={24} className="h-6 my-2 w-auto" />
             </Link>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-10 text-white/90">
-              <NavLink to="/" label={t.nav.home} />
-              <NavLink to="/story" label={t.nav.history} />
-              <NavLink to="/menu" label={t.nav.menu} />
-              <NavLink to="/#reservation" label={t.nav.book} isHash />
+              <NavLink to="/" label={t.nav.home} active={location.pathname === '/'} onClick={closeMenu} />
+              <NavLink to="/story" label={t.nav.history} active={location.pathname === '/story'} onClick={closeMenu} />
+              <NavLink to="/menu" label={t.nav.menu} active={location.pathname === '/menu'} onClick={closeMenu} />
+              {/* Reserve is a button: it scrolls to the section instead of changing the route */}
+              <button
+                onClick={scrollToReservation}
+                className="transition-colors duration-300 font-serif uppercase tracking-[0.15em] text-sm md:text-xs lg:text-sm relative group hover:text-qazan-ruby"
+              >
+                {t.nav.book}
+                <span className="absolute -bottom-2 left-0 w-full h-px bg-qazan-gold transform transition-transform duration-300 scale-x-0 group-hover:scale-x-50"></span>
+              </button>
             </div>
 
             {/* Right Actions */}
@@ -92,19 +121,19 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, t }) => {
               <div className="flex space-x-3 text-sm font-medium">
                 <button
                   onClick={() => setLang('en')}
-                  className={`transition-colors ${lang === 'en' ? 'text-qazan-gold' : 'text-white/40 hover:text-white'}`}
+                  className={`transition-colors ${lang === 'en' ? 'text-qazan-gold' : 'text-white/60 hover:text-white'}`}
                 >
                   EN
                 </button>
                 <span className="text-white/20">|</span>
                 <button
                   onClick={() => setLang('fi')}
-                  className={`transition-colors ${lang === 'fi' ? 'text-qazan-gold' : 'text-white/40 hover:text-white'}`}
+                  className={`transition-colors ${lang === 'fi' ? 'text-qazan-gold' : 'text-white/60 hover:text-white'}`}
                 >
                   FI
                 </button>
               </div>
-              <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white hover:text-qazan-ruby transition-colors z-50">
+              <button onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? "Close menu" : "Open menu"} className="md:hidden text-white hover:text-qazan-ruby transition-colors z-50">
                 {isOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
@@ -118,7 +147,8 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, t }) => {
         <Link to="/menu" onClick={() => setIsOpen(false)} className={`text-4xl font-serif hover:text-qazan-ruby ${location.pathname === '/menu' ? 'text-qazan-gold' : 'text-white'}`}>{t.nav.menu}</Link>
         <Link to="/story" onClick={() => setIsOpen(false)} className={`text-4xl font-serif hover:text-qazan-ruby ${location.pathname === '/story' ? 'text-qazan-gold' : 'text-white'}`}>{t.nav.history}</Link>
         <div className="flex flex-col items-center gap-6 pt-8">
-           <a href="/#reservation" onClick={() => setIsOpen(false)} className="text-2xl font-serif text-white/60 hover:text-white">{t.nav.book}</a>
+           {/* ─── Mobile reserve also uses the handler ─── */}
+           <button onClick={scrollToReservation} className="text-2xl font-serif text-white/60 hover:text-white">{t.nav.book}</button>
         </div>
       </div>
     </>

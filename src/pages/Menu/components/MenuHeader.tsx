@@ -29,7 +29,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ t, categories, activeCategory, 
             onClick={() => setActiveCategory(cat)}
             className={`uppercase tracking-widest text-sm md:text-base font-bold transition-all duration-300 pb-2 relative ${activeCategory === cat ? 'text-qazan-gold scale-105' : 'text-gray-400 hover:text-white'}`}
           >
-            {cat === 'all' ? 'All' : t.nav[cat as keyof typeof t.nav]}
+            {cat === 'all' ? t.menu_page.all_category : t.nav[cat as keyof typeof t.nav]}
             {activeCategory === cat && (
               <motion.div
                 layoutId="activeTab"

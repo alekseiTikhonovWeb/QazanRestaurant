@@ -1,25 +1,41 @@
-import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
-    return {
-      server: {
-        port: 3000,
-        host: '0.0.0.0',
+export default defineConfig({
+  server: {
+    port: 3000,
+  },
+  plugins: [
+    react(),
+    tailwindcss(),
+    // Runs on `vite build` only: recompresses every image that ends up in dist/.
+    ViteImageOptimizer({
+      png: { quality: 80 },
+      jpeg: { quality: 80 },
+      jpg: { quality: 80 },
+      webp: { quality: 80 },
+      avif: { quality: 65 },
+      svg: {
+        multipass: true,
+        plugins: [{ name: 'preset-default' }],
       },
-      plugins: [react(), tailwindcss()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        
+    }),
+  ],
+  build: {
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
+    rollupOptions: {
+      output: {
+        // Vendor code changes far less often than app code; keeping it in
+        // separate chunks lets browsers keep it cached between deploys.
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-icons': ['lucide-react'],
+        },
       },
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '.'),
-        }
-      }
-    };
+    },
+  },
 });

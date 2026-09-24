@@ -17,6 +17,22 @@ export interface Review {
   rating: number;
 }
 
+export interface TeaVariant {
+  name: string;
+  price: string;
+  image: string;
+  description: string;
+  ingredients: string;
+  taste: string;
+  note: string;
+}
+
+export interface DishDetail {
+  ingredients: string;
+  taste: string;
+  pair: string;
+}
+
 export interface Translations {
   nav: {
     home: string;
@@ -53,6 +69,7 @@ export interface Translations {
     tag: string;
     quote: string;
     desc: string;
+    name: string;
   };
   reviews: {
     subtitle: string;
@@ -61,31 +78,38 @@ export interface Translations {
   reservation: {
     title: string;
     subtitle: string;
-    label_name: string;
-    label_phone: string;
-    label_date: string;
-    label_guests: string;
     btn_submit: string;
-    success_title: string;
   };
   footer: {
     desc: string;
     contact: string;
     hours_title: string;
     social: string;
-    days_week: string;
-    days_fri: string;
-    days_sun: string;
+    days_weekdays: string;
+    days_weekend: string;
   };
   menu_page: {
     title: string;
     subtitle: string;
+    view_details: string;
+    no_items: string;
+    all_category: string;
+  };
+  modal: {
+    tea_collection: string;
+    soda_collection: string;
+    of: string;
+    whats_in_it: string;
+    how_it_tastes: string;
+    good_to_know: string;
   };
   story_page: {
     hero_title: string;
     hero_subtitle: string;
+    section1_tag: string;
     section1_title: string;
     section1_text: string;
+    section2_tag: string;
     section2_title: string;
     section2_text: string;
     values_title: string;
@@ -111,5 +135,12 @@ export interface Translations {
     a2: string;
     q3: string;
     a3: string;
+    concierge: string;
+    guest_service: string;
+  };
+  not_found: {
+    title: string;
+    text: string;
+    back: string;
   };
 }

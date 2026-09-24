@@ -4,14 +4,15 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Reveal } from '../../../components/Reveal';
 import { MENU_ITEMS } from '../../../constants';
-import { Translations } from '../../../types';
+import { Language, Translations } from '../../../types';
 
 interface MenuCarouselProps {
   t: Translations;
+  lang: Language;
 }
 
-const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
-  const featuredItems = MENU_ITEMS.slice(0, 3);
+const MenuCarousel: React.FC<MenuCarouselProps> = ({ t, lang }) => {
+  const featuredItems = MENU_ITEMS[lang].slice(0, 3);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
@@ -23,17 +24,17 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
   };
 
   return (
-    <section className="py-32 bg-gradient-to-b from-[#050505] to-[#0a1014] relative overflow-hidden">
+    <section className="py-32 bg-linear-to-b from-qazan-dark to-[#0a1014] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-16 flex flex-col md:flex-row justify-between items-end gap-6">
         <Reveal>
           <span className="text-qazan-ruby uppercase tracking-widest text-sm block mb-4 font-semibold">{t.menu.tag}</span>
           <h2 className="text-5xl md:text-7xl font-serif text-white">{t.menu.title}</h2>
         </Reveal>
         <div className="flex items-center gap-4">
-          <button onClick={prevSlide} className="p-4 border border-white/10 rounded-full text-white hover:bg-white hover:text-black transition-all">
+          <button onClick={prevSlide} aria-label="Previous slide" className="p-4 border border-white/10 rounded-full text-white hover:bg-white hover:text-black transition-all">
             <ChevronLeft size={24} />
           </button>
-          <button onClick={nextSlide} className="p-4 border border-white/10 rounded-full text-white hover:bg-white hover:text-black transition-all">
+          <button onClick={nextSlide} aria-label="Next slide" className="p-4 border border-white/10 rounded-full text-white hover:bg-white hover:text-black transition-all">
             <ChevronRight size={24} />
           </button>
           <Link to="/menu" className="ml-10 hidden md:flex items-center gap-2 text-qazan-gold hover:text-white transition-colors uppercase tracking-widest text-sm font-bold group">
@@ -43,7 +44,7 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 min-h-[700px] h-auto relative pb-20 md:pb-0">
+      <div className="max-w-7xl mx-auto px-6 min-h-[500px] md:min-h-[600px] h-auto relative">
         {/* Background Ambient Blur */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-qazan-gold/10 rounded-full blur-[100px] pointer-events-none"></div>
 
@@ -58,11 +59,6 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
           >
             {/* Text Section */}
             <div className="md:col-span-5 relative z-10 pl-0 md:pl-12 order-2 md:order-1 flex flex-col justify-center h-full pt-10 md:pt-0 text-center md:text-left">
-              {/* Large Index Number */}
-              <span className="absolute -top-10 md:-top-20 left-1/2 md:-left-10 -translate-x-1/2 md:translate-x-0 text-[8rem] md:text-[12rem] font-serif leading-none text-white/[0.03] select-none pointer-events-none">
-                0{currentIndex + 1}
-              </span>
-
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -71,7 +67,7 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
               >
                 <h3 className="text-4xl md:text-8xl font-serif text-white mb-6 md:mb-8 leading-none">
                   {featuredItems[currentIndex].title.split(' ')[0]} <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-qazan-gold to-qazan-ruby italic">
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-qazan-gold to-qazan-ruby italic">
                     {featuredItems[currentIndex].title.split(' ').slice(1).join(' ')}
                   </span>
                 </h3>
@@ -82,7 +78,7 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
 
                 <div className="flex items-center justify-center md:justify-start gap-8">
                   <span className="text-3xl md:text-4xl text-white font-serif">{featuredItems[currentIndex].price}</span>
-                  <Link to="/menu" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-qazan-gold hover:border-qazan-gold hover:text-black transition-all">
+                  <Link to="/menu" aria-label="View full menu" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-qazan-gold hover:border-qazan-gold hover:text-black transition-all">
                     <ArrowRight size={20} />
                   </Link>
                 </div>
@@ -98,13 +94,16 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="w-full h-full"
               >
-                <div className="relative w-full h-full rounded-[2rem] md:rounded-l-[5rem] overflow-hidden shadow-2xl border border-white/10 md:border-r-0">
+                <div className="relative w-full h-full rounded-4xl md:rounded-l-[5rem] overflow-hidden shadow-2xl border border-white/10 md:border-r-0">
                   <img
                     src={featuredItems[currentIndex].image}
                     alt={featuredItems[currentIndex].title}
+                    loading="lazy"
+                    width={1200}
+                    height={700}
                     className="w-full h-full object-cover transform scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-l from-transparent via-transparent to-black/50"></div>
+                  <div className="absolute inset-0 bg-linear-to-t md:bg-linear-to-l from-transparent via-transparent to-black/50"></div>
                 </div>
               </motion.div>
             </div>
@@ -112,32 +111,7 @@ const MenuCarousel: React.FC<MenuCarouselProps> = ({ t }) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Progress Bar & Controls */}
-        <div className="absolute bottom-10 left-6 md:left-12 right-6 md:right-12 flex items-center justify-between z-20">
-          <div className="flex gap-4">
-            {/* Number Progress */}
-            <span className="text-white font-serif text-lg">0{currentIndex + 1}</span>
-            <div className="w-32 h-[2px] bg-white/20 self-center relative overflow-hidden">
-              <motion.div
-                className="absolute top-0 left-0 h-full bg-qazan-gold"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 5, ease: "linear", repeat: Infinity }}
-                key={currentIndex}
-              />
-            </div>
-            <span className="text-white/30 font-serif text-lg">0{featuredItems.length}</span>
-          </div>
 
-          <div className="flex gap-4">
-            <button onClick={prevSlide} className="p-4 rounded-full border border-white/10 text-white hover:bg-white hover:text-black transition-all hover:scale-110">
-              <ChevronLeft size={20} />
-            </button>
-            <button onClick={nextSlide} className="p-4 rounded-full border border-white/10 text-white hover:bg-white hover:text-black transition-all hover:scale-110">
-              <ChevronRight size={20} />
-            </button>
-          </div>
-        </div>
       </div>
 
       <div className="text-center md:hidden pt-12">

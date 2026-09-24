@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react';
 import { useScroll, useTransform } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import { Translations } from '../../types';
+import { Language, Translations } from '../../types';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
 import MenuCarousel from './components/MenuCarousel';
-import ChefSection from './components/ChefSection';
+import TeamSection from './components/TeamSection';
 import ReviewsSection from './components/ReviewsSection';
 import ReservationSection from './components/ReservationSection';
 
 interface HomeProps {
   t: Translations;
+  lang: Language;
 }
 
-const Home: React.FC<HomeProps> = ({ t }) => {
+const Home: React.FC<HomeProps> = ({ t, lang }) => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
@@ -36,8 +37,8 @@ const Home: React.FC<HomeProps> = ({ t }) => {
     <div className="bg-qazan-black w-full overflow-hidden">
       <HeroSection t={t} y1={y1} scale={scale} opacity={opacity} />
       <AboutSection t={t} />
-      <MenuCarousel t={t} />
-      <ChefSection t={t} />
+      <MenuCarousel t={t} lang={lang} />
+      <TeamSection t={t} />
       <ReviewsSection t={t} />
       <ReservationSection t={t} />
     </div>

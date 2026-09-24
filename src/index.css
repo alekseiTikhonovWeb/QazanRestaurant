@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-qazan-ruby: #9f1239;
+  --color-qazan-gold: #ca8a04;
+  --color-qazan-black: #0a0a0a;
+  --color-qazan-dark: #050505;
+  /* Fonts are self-hosted (see src/main.tsx); the "Variable" names come from @fontsource-variable. */
+  --font-serif: "Playfair Display Variable", "Playfair Display", Georgia, serif;
+  --font-sans: "Manrope Variable", "Manrope", system-ui, sans-serif;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #e5e5e5;
+  overflow-x: hidden;
+}
+
+.text-shadow-strong {
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+  color: transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

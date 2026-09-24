@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Reveal } from '../../../components/Reveal';
 import { Translations } from '../../../types';
@@ -19,7 +19,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ t }) => {
   const aboutTextY = useTransform(aboutScrollY, [0, 1], ["20%", "-20%"]);
 
   return (
-    <section id="about" ref={aboutRef} className="py-32 px-6 relative max-w-7xl mx-auto overflow-visible mb-20">
+    <section id="about" ref={aboutRef} className="py-16 md:py-32 px-6 relative max-w-7xl mx-auto overflow-visible mb-10 md:mb-20">
 
       {/* Background Decorative Lines */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-white/5"></div>
@@ -35,9 +35,12 @@ const AboutSection: React.FC<AboutSectionProps> = ({ t }) => {
                 {/* Main Image */}
                 <div className="overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl relative">
                   <img
-                    src="/images/9.webp"
-                    alt="Interior"
-                    className="w-full h-[400px] md:h-[600px] object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
+                    src="/images/qazan_photo.webp"
+                    alt="QAZAN restaurant entrance and dining room in Itäkeskus, Helsinki"
+                    loading="lazy"
+                    width={1600}
+                    height={1194}
+                    className="w-full h-[400px] md:h-[600px] object-cover transition-all duration-1000 scale-105 group-hover:scale-100"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700"></div>
                 </div>

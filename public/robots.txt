@@ -1,0 +1,15 @@
+# ─── ROBOTS.TXT ──────────────────────────────────────────
+# This file tells search engine crawlers what they can
+# and can't access on your site.
+#
+# "User-agent: *" means "all crawlers" (Google, Bing, etc.)
+# "Allow: /" means "you can crawl everything"
+# "Sitemap:" tells crawlers where to find your sitemap
+#
+# Without this file, crawlers still index your site,
+# but having it is best practice and signals professionalism.
+# ─────────────────────────────────────────────────────────
+
+User-agent: *
+Allow: /
+Sitemap: https://qazan.fi/sitemap.xml

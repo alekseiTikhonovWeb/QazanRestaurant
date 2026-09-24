@@ -1,15 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Menu from './pages/Menu';
-import Story from './pages/Story';
-import ChatBot from './components/ChatBot';
+import NotFound from './pages/NotFound';
 import { TRANSLATIONS } from './constants';
 import { Language } from './types';
 
-// Scroll to top component
+// Loaded only when the visitor navigates there.
+const Menu = lazy(() => import('./pages/Menu'));
+const Story = lazy(() => import('./pages/Story'));
+const ChatBot = lazy(() => import('./components/ChatBot'));
+
+const LANG_STORAGE_KEY = 'qazan-lang';
+
+const isLanguage = (value: unknown): value is Language => value === 'en' || value === 'fi';
+
+// Priority: `?lang=` in the URL (the hreflang links use it), then the visitor's
+// last choice, then the browser language, then English.
+const getInitialLanguage = (): Language => {
+  const fromUrl = new URLSearchParams(window.location.search).get('lang');
+  if (isLanguage(fromUrl)) return fromUrl;
+  try {
+    const stored = localStorage.getItem(LANG_STORAGE_KEY);
+    if (isLanguage(stored)) return stored;
+  } catch {
+    // Storage can be unavailable (private mode, blocked cookies); fall through.
+  }
+  return navigator.language.toLowerCase().startsWith('fi') ? 'fi' : 'en';
+};
+
+// Reset the scroll position when the route changes.
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -19,61 +40,46 @@ const ScrollToTop = () => {
 };
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('en');
+  const [lang, setLang] = useState<Language>(getInitialLanguage);
   const t = TRANSLATIONS[lang];
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {
+      // Remembering the language is a convenience, not a requirement.
+    }
+  }, [lang]);
 
   return (
     <Router>
       <ScrollToTop />
       <div className="antialiased selection:bg-qazan-ruby selection:text-white min-h-screen flex flex-col relative">
-        
-        {/* Global Ambient Effects */}
+        {/* Global ambient effects */}
         <div className="fixed inset-0 pointer-events-none z-0 bg-pattern-overlay opacity-10"></div>
         <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-radial-gradient from-qazan-ruby/10 to-transparent blur-[120px] pointer-events-none z-0 animate-pulse duration-10000"></div>
-        
+
         <Navbar lang={lang} setLang={setLang} t={t} />
-        
+
         <main className="grow z-10">
-          <Routes>
-            <Route path="/" element={<Home t={t} />} />
-            <Route path="/menu" element={<Menu t={t} />} />
-            <Route path="/story" element={<Story t={t} />} />
-          </Routes>
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <Routes>
+              <Route path="/" element={<Home t={t} lang={lang} />} />
+              <Route path="/menu" element={<Menu t={t} lang={lang} />} />
+              <Route path="/story" element={<Story t={t} />} />
+              <Route path="*" element={<NotFound t={t.not_found} />} />
+            </Routes>
+          </Suspense>
         </main>
 
-        <ChatBot t={t.chatbot} />
+        <Suspense fallback={null}>
+          <ChatBot t={t.chatbot} />
+        </Suspense>
 
         <Footer t={t.footer} />
-        
-        {/* Cookie Banner Simulation */}
-        <CookieBanner />
       </div>
     </Router>
-  );
-};
-
-const CookieBanner = () => {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!visible) return null;
-
-  return (
-    <div className="fixed bottom-0 left-0 w-full bg-qazan-black border-t border-white/10 p-4 z-100 flex flex-col md:flex-row justify-between items-center gap-4 shadow-[0_-10px_40px_rgba(0,0,0,0.8)] animate-in slide-in-from-bottom duration-500">
-      <p className="text-xs text-gray-400 text-center md:text-left">
-        We use cookies to ensure you get the best experience.
-      </p>
-      <button 
-        onClick={() => setVisible(false)}
-        className="bg-white text-black px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-qazan-gold transition-colors"
-      >
-        Accept
-      </button>
-    </div>
   );
 };
 

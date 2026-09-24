@@ -9,7 +9,7 @@ interface ValuesSectionProps {
 
 const ValuesSection: React.FC<ValuesSectionProps> = ({ t }) => {
   return (
-    <section className="py-32 bg-[#050505] relative overflow-hidden">
+    <section className="py-32 bg-qazan-black relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-qazan-ruby/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -19,8 +19,8 @@ const ValuesSection: React.FC<ValuesSectionProps> = ({ t }) => {
           </Reveal>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <Reveal delay={0}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-stretch">
+          <Reveal delay={0} fullHeight>
             <div className="flex flex-col items-center text-center p-12 border border-white/5 bg-white/5 rounded-3xl hover:border-qazan-gold/30 transition-colors duration-500 h-full group hover:bg-white/10">
               <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center text-qazan-gold mb-10 border border-white/10 group-hover:scale-110 transition-transform duration-500">
                 <Compass size={40} strokeWidth={1.5} />
@@ -30,7 +30,7 @@ const ValuesSection: React.FC<ValuesSectionProps> = ({ t }) => {
             </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} fullHeight>
             <div className="flex flex-col items-center text-center p-12 border border-white/5 bg-white/5 rounded-3xl hover:border-qazan-gold/30 transition-colors duration-500 h-full group hover:bg-white/10">
               <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center text-qazan-gold mb-10 border border-white/10 group-hover:scale-110 transition-transform duration-500">
                 <Heart size={40} strokeWidth={1.5} />
@@ -40,7 +40,7 @@ const ValuesSection: React.FC<ValuesSectionProps> = ({ t }) => {
             </div>
           </Reveal>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.2} fullHeight>
             <div className="flex flex-col items-center text-center p-12 border border-white/5 bg-white/5 rounded-3xl hover:border-qazan-gold/30 transition-colors duration-500 h-full group hover:bg-white/10">
               <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center text-qazan-gold mb-10 border border-white/10 group-hover:scale-110 transition-transform duration-500">
                 <Award size={40} strokeWidth={1.5} />
